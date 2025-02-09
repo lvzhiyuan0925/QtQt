@@ -4,7 +4,7 @@ from abc import abstractmethod
 from sys import stderr
 from PyQt5.QtCore import QTimer, QPoint, Qt, QRect
 from PyQt5.QtGui import QCursor
-from PyQt5.QtWidgets import QPushButton, QWidget, QApplication, QMainWindow, QLabel, QTextEdit, QButtonGroup
+from PyQt5.QtWidgets import QPushButton, QWidget, QApplication, QMainWindow, QLabel, QTextEdit, QButtonGroup, QLineEdit
 
 
 def _run_debug(queue: multiprocessing.Queue):
@@ -269,6 +269,25 @@ class Container(object):
             i.hide()
 
 
+class Label(QLabel, Code):
+    def __init__(self, title="label", window=None):
+        super().__init__(window)
+        super().setText(title)
+        self.set_widget(self)
+
+    def set_widget(self, widget):
+        super().set_widget(widget)
+
+
+class Input(QLineEdit, Code):
+    def __init__(self, window=None):
+        super().__init__(window)
+        self.set_widget(self)
+
+    def set_widget(self, widget):
+        super().set_widget(widget)
+
+
 class APP(QApplication):
     def __init__(self, debug: bool = False):
         self.window: QWidget = ...
@@ -433,12 +452,7 @@ class SizeBox:
 
 if __name__ == '__main__':
     with APP(debug=True) as window:
-        buttons = []
-
-        for i in range(5):
-            Button(window=window)[buttons] >> "0 {}".format(i * 50) & True
-
-        buttongroup = ButtonGroup(window, "", "background: red")
-        buttongroup.add_buttons(buttons)
-
+        Label(title="sb", window=window) & True
+        A: QLineEdit = Input(window=window) & True
+        A.editingFinished.connect(lambda:print(A.text()))
         window.resize(800, 600)
