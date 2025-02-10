@@ -4,7 +4,8 @@ from abc import abstractmethod
 from sys import stderr
 from PyQt5.QtCore import QTimer, QPoint, Qt, QRect
 from PyQt5.QtGui import QCursor
-from PyQt5.QtWidgets import QPushButton, QWidget, QApplication, QMainWindow, QLabel, QTextEdit, QButtonGroup, QLineEdit
+from PyQt5.QtWidgets import QPushButton, QWidget, QApplication, QMainWindow, QLabel, QTextEdit, QButtonGroup, \
+    QLineEdit, QListWidget
 
 
 def _run_debug(queue: multiprocessing.Queue):
@@ -288,6 +289,25 @@ class Input(QLineEdit, Code):
         super().set_widget(widget)
 
 
+class ListBox(QListWidget, Code):
+    def __init__(self, window=None):
+        super().__init__(window)
+        self.set_widget(self)
+
+    def set_widget(self, widget):
+        super().set_widget(widget)
+
+
+class __ImageView(QLabel, Code):
+    def __init__(self, path, window=None):
+        super().__init__(window)
+        super().setStyleSheet("background-image: {}".format(path))
+        self.set_widget(self)
+
+    def set_widget(self, widget):
+        super().set_widget(widget)
+
+
 class APP(QApplication):
     def __init__(self, debug: bool = False):
         self.window: QWidget = ...
@@ -452,7 +472,5 @@ class SizeBox:
 
 if __name__ == '__main__':
     with APP(debug=True) as window:
-        Label(title="sb", window=window) & True
-        A: QLineEdit = Input(window=window) & True
-        A.editingFinished.connect(lambda:print(A.text()))
         window.resize(800, 600)
+        
